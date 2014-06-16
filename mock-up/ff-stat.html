@@ -4,24 +4,102 @@
  
 <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
 
-</head>
- 
+<!--[if IE]>
+     <script type="text/javascript" src="SegmentDisplay/excanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript" src="SegmentDisplay/segment-display.js"></script>
+
  
 <script type="text/javascript">
-  var json = '{"n39_clients":0,"nodes_online":21,"mesh_links":6,"clients":3,"nodes":23}';
-  var obj = JSON.parse(json);
+//  var json = '{"n39_clients":0,"nodes_online":21,"mesh_links":6,"clients":3,"nodes":23}';
+//  var obj = JSON.parse(json);
  
+
+function createDisplay(name, width) {
+      var display = new SegmentDisplay(name);
+      display.pattern         = "##########".slice(10-width);
+      display.cornerType      = 2;
+      display.displayType     = 7;
+      display.displayAngle    = 9;
+      display.digitHeight     = 20;
+      display.digitWidth      = 12;
+      display.digitDistance   = 2;
+      display.segmentWidth    = 3;
+      display.segmentDistance = 0.5;
+      display.colorOn         = "rgba(250, 0, 0, 1)";
+      display.colorOff        = "rgba(200, 200, 200, 1)"; 
+      
+      return display;
+}
+      
+function setPaddedValue(display, val) {
+  	display.setValue(('00000'+val)
+	  .slice(-display.pattern.length));
+}
+      
+var disp_clients = createDisplay('display_clients', 5);
+var disp_nodes_online = createDisplay('display_nodes_online', 4);
+var disp_nodes = createDisplay('display_nodes', 4);
+var disp_mesh_links = createDisplay('display_mesh_links', 4);
+var disp_n39_clients = createDisplay('display_n39_clients', 3);
+
 $(document).ready(function(){
-  $('#msgid').html(obj.nodes_online);
+  setPaddedValue(disp_clients, 'UUUUUU');
+  setPaddedValue(disp_nodes_online, 'UUUUUU');
+  setPaddedValue(disp_nodes, 'UUUUUU');
+  setPaddedValue(disp_mesh_links, 'UUUUUU');
+  setPaddedValue(disp_n39_clients, 'UUUUUU');
+  update();
+  window.setTimeout('update()', 5000);
 });
 
+      
+      
+function update() {
+  var json_url = "http://map.md.freifunk.net/stats.json";
+  
+  $.getJSON(json_url)
+      .done(function(data) {
+	setPaddedValue(disp_clients, data.clients);
+	setPaddedValue(disp_nodes_online, data.nodes_online);
+	setPaddedValue(disp_nodes, data.nodes);
+	setPaddedValue(disp_mesh_links, data.mesh_links);
+	setPaddedValue(disp_n39_clients, data.n39_clients);
+	$("#msgid").html(data.nodes_online);
+      });
+};
+
 </script>
+
+</head>
+ 
 
 <body>
 
 This is Hello World by HTML
  
 <div id="msgid">-1</div>
- 
+
+<canvas id="display_clients" width="260" height="140">
+  Your browser is unfortunately not supported.
+</canvas>
+
+<canvas id="display_nodes_online" width="260" height="140">
+  Your browser is unfortunately not supported.
+</canvas>
+
+<canvas id="display_nodes" width="260" height="140">
+  Your browser is unfortunately not supported.
+</canvas>
+
+<canvas id="display_mesh_links" width="260" height="140">
+  Your browser is unfortunately not supported.
+</canvas>
+
+<canvas id="display_n39_clients" width="260" height="140">
+  Your browser is unfortunately not supported.
+</canvas>
+
 </body>
 </html>
