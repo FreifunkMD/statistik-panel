@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>jQuery Hello World</title>
+ 
+<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+
+</head>
+ 
+ 
+<script type="text/javascript">
+  var json = '{"n39_clients":0,"nodes_online":21,"mesh_links":6,"clients":3,"nodes":23}';
+  var obj = JSON.parse(json);
+ 
+$(document).ready(function(){
+  $('#msgid').html(obj.nodes_online);
+});
+
+</script>
+
+<body>
+
+This is Hello World by HTML
+ 
+<div id="msgid">-1</div>
+ 
+</body>
+</html>
