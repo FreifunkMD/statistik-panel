@@ -1,0 +1,170 @@
+<html>
+<head>
+<title>ff-stat</title>
+ 
+<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+
+<!--[if IE]>
+     <script type="text/javascript" src="SegmentDisplay/excanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript" src="SegmentDisplay/segment-display.js"></script>
+
+ 
+<script type="text/javascript">
+//  var json = '{"n39_clients":0,"nodes_online":21,"mesh_links":6,"clients":3,"nodes":23}';
+//  var obj = JSON.parse(json);
+ 
+
+function createDisplay(name, width) {
+      var display = new SegmentDisplay(name);
+      display.pattern         = "##########".slice(10-width);
+      display.cornerType      = 2;
+      display.displayType     = 7;
+      display.displayAngle    = 9;
+      display.digitHeight     = 20;
+      display.digitWidth      = 12;
+      display.digitDistance   = 2;
+      display.segmentWidth    = 2;
+      display.segmentDistance = 0.5;
+      display.colorOn         = "rgba(250, 0, 0, 1)";
+      display.colorOff        = "rgba(250, 250, 250, 1)"; 
+      
+      return display;
+}
+      
+function setPaddedValue(display, val) {
+  	display.setValue(('00000'+val)
+	  .slice(-display.pattern.length));
+}
+      
+var disp_clients = createDisplay('display_clients', 5);
+var disp_nodes_online = createDisplay('display_nodes_online', 4);
+var disp_nodes = createDisplay('display_nodes', 4);
+var disp_mesh_links = createDisplay('display_mesh_links', 4);
+var disp_n39_clients = createDisplay('display_n39_clients', 3);
+
+$(document).ready(function(){
+  setPaddedValue(disp_clients, 'UUUUUU');
+  setPaddedValue(disp_nodes_online, 'UUUUUU');
+  setPaddedValue(disp_nodes, 'UUUUUU');
+  setPaddedValue(disp_mesh_links, 'UUUUUU');
+  setPaddedValue(disp_n39_clients, 'UUUUUU');
+  update();
+  window.setTimeout('update()', 5000);
+});
+
+      
+      
+function update() {
+  var json_url = "http://map.md.freifunk.net/stats.json";
+  
+  $.getJSON(json_url)
+      .done(function(data) {
+	setPaddedValue(disp_clients, data.clients);
+	setPaddedValue(disp_nodes_online, data.nodes_online);
+	setPaddedValue(disp_nodes, data.nodes);
+	setPaddedValue(disp_mesh_links, data.mesh_links);
+	setPaddedValue(disp_n39_clients, data.n39_clients);
+      });
+};
+
+</script>
+
+<style type="text/css">
+.largesegment {
+  text-align: right; 
+}
+
+.largesegment h1 {
+  font-family: monospace;
+  font-size: 56px;
+  font-style: normal;
+  font-weight: normal;
+  padding: 0px;
+  margin: 0px;  
+}
+
+.smalllabel {
+  font-size: 24px;
+  font-family: monospace;
+  padding-left: 10px;
+}
+
+#panel {
+  position: absolute; 
+  top: 0; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  margin: auto;
+  border: solid 1px;
+}
+</style>
+
+</head>
+ 
+ 
+ <!-- 736 -->
+
+<body>
+
+<div id="panel" style="width: 1000px; height: 680px;">
+
+    <div id="logo" style="width: 260px; height: 261px; position: absolute; left:50; top:75px;">
+      <img src="logovorschlag_md.svg" />
+    </div>
+
+    <div id="clients" class="largesegment" style="width: 612; heigth: 262; position: absolute; right: 50; top: 50;">
+      <h1 style="display: block;">Clients</h1>
+      <canvas id="display_clients" width="612" height="201">
+	Your browser is unfortunately not supported.
+      </canvas>
+    </div>
+  
+  
+    <table id="smallstats" style="width:325; height:254; position: absolute; bottom: 50; left: 50">
+    <tr>
+      <td style="text-align: right;">
+	<canvas id="display_nodes" width="158" height="71">
+	  Your browser is unfortunately not supported.
+	</canvas>
+      </td>
+      <td class="smalllabel">
+	Knoten<br />
+	gesamt
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: right;">
+	<canvas id="display_mesh_links" width="158" height="71">
+	  Your browser is unfortunately not supported.
+	</canvas>
+      </td>
+      <td class="smalllabel">
+	Mesh<br/>
+	-Links
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: right;">
+	<canvas id="display_n39_clients" width="111" height="71">
+	  Your browser is unfortunately not supported.
+	</canvas>
+      </td>
+      <td class="smalllabel">
+	Netz39<br/>-Clients    
+      </td>
+    </tr>
+    </table>
+
+    <div id="nodes_online" class="largesegment" style="width: 487; height:262; position: absolute; bottom: 50; right: 50">
+      <h1>Online-Knoten</h1>
+      <canvas id="display_nodes_online" width="487" height="201">
+	Your browser is unfortunately not supported.
+      </canvas>
+    </div>
+  
+</div>
+</body>
+</html>
