@@ -51,13 +51,13 @@ $(document).ready(function(){
   setPaddedValue(disp_mesh_links, 'UUUUUU');
   setPaddedValue(disp_n39_clients, 'UUUUUU');
   update();
-  window.setTimeout('update()', 5000);
+  window.setInterval('update()', 5000);
 });
 
       
       
 function update() {
-  var json_url = "http://map.md.freifunk.net/stats.json";
+  var json_url = "https://web1.md.freifunk.net/nodestat.json";
   
   $.getJSON(json_url)
       .done(function(data) {
