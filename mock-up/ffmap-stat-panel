@@ -1,0 +1,67 @@
+#!/usr/bin/perl -w
+
+use strict;
+use warnings;
+
+use Data::Dumper;
+use JSON;
+use LWP::Simple;
+
+# init variables
+my %sum = (
+    'clients'      => 0,
+    'nodes_online' => 0,
+    'nodes'        => 0,
+    'mesh_links'   => 0,
+    'n39_clients'  => 0
+);
+
+#my $sum_clientcount  = 0;
+#my $node_count       = 0;
+#my $sum_online_nodes = 0;
+
+my %netz39_node = ( '12:fe:ed:ce:ae:be' => 0 );
+
+#my $sum_n39_clients = 0;
+
+#my $sum_mesh_links = 0;
+
+# get json
+my $content = get('http://map.md.freifunk.net/data/nodes.json');
+die 'Could not get it!' unless defined $content;
+
+my $nodes_ref = decode_json($content);
+
+# iterate over nodes
+foreach my $node ( @{ $nodes_ref->{'nodes'} } ) {
+    if ( !( $node->{'flags'}->{'gateway'} || $node->{'flags'}->{'client'} ) ) {
+        $sum{'nodes'}++;
+        $sum{'clients'} += $node->{'clientcount'} if $node->{'clientcount'};
+        if ( $node->{'flags'}->{'online'} ) { $sum{'nodes_online'}++ }
+    }
+
+    foreach my $id ( keys %netz39_node ) {
+        if ( $node->{'id'} and $id eq $node->{'id'} ) {
+            $netz39_node{$id} = $node->{'clientcount'};
+            $sum{'n39_clients'} += $node->{'clientcount'};
+        }
+    }
+}
+
+#print "$sum{'nodes_online'} of $sum{'nodes'} nodes online with $sum{'clients'} clients\n";
+#print "$sum{'n39_clients'} clients online on Netz39 nodes\n";
+
+# iterate over links
+foreach my $link ( @{ $nodes_ref->{'links'} } ) {
+    if ( !defined $link->{'type'} ) {
+        $sum{'mesh_links'}++;
+    }
+}
+
+#print "$sum{'mesh_links'} mesh links in FFMD\n";
+
+my $json_text = encode_json( \%sum );
+
+print "$json_text\n";
+
+# vim: set ft=perl et sts=0 ts=4 sw=4 sr:
