@@ -38,17 +38,17 @@ function setPaddedValue(display, val) {
 	  .slice(-display.pattern.length));
 }
       
-var disp_clients = createDisplay('display_clients', 5);
-var disp_nodes_online = createDisplay('display_nodes_online', 4);
-var disp_nodes = createDisplay('display_nodes', 4);
-var disp_mesh_links = createDisplay('display_mesh_links', 4);
-var disp_n39_clients = createDisplay('display_n39_clients', 3);
+var disp_clients = createDisplay('display_clients', 4);
+var disp_nodes_online = createDisplay('display_nodes_online', 3);
+var disp_nodes = createDisplay('display_nodes', 3);
+//var disp_mesh_links = createDisplay('display_mesh_links', 4);
+var disp_n39_clients = createDisplay('display_n39_clients', 2);
 
 $(document).ready(function(){
   setPaddedValue(disp_clients, 'UUUUUU');
   setPaddedValue(disp_nodes_online, 'UUUUUU');
   setPaddedValue(disp_nodes, 'UUUUUU');
-  setPaddedValue(disp_mesh_links, 'UUUUUU');
+//  setPaddedValue(disp_mesh_links, 'UUUUUU');
   setPaddedValue(disp_n39_clients, 'UUUUUU');
   update();
   window.setInterval('update()', 5000);
@@ -64,7 +64,7 @@ function update() {
 	setPaddedValue(disp_clients, data.clients);
 	setPaddedValue(disp_nodes_online, data.nodes_online);
 	setPaddedValue(disp_nodes, data.nodes);
-	setPaddedValue(disp_mesh_links, data.mesh_links);
+//	setPaddedValue(disp_mesh_links, data.mesh_links);
 	setPaddedValue(disp_n39_clients, data.n39_clients);
       });
 };
@@ -116,7 +116,7 @@ function update() {
     </div>
 
     <div id="clients" class="largesegment" style="width: 612; heigth: 262; position: absolute; right: 50; top: 50;">
-      <h1 style="display: block;">Clients</h1>
+      <h1 style="display: block;">Clients Online</h1>
       <canvas id="display_clients" width="612" height="201">
 	Your browser is unfortunately not supported.
       </canvas>
@@ -124,6 +124,16 @@ function update() {
   
   
     <table id="smallstats" style="width:325; height:254; position: absolute; bottom: 50; left: 50">
+    <tr>
+      <td style="text-align: right;">
+	<canvas id="display_n39_clients" width="111" height="71">
+	  Your browser is unfortunately not supported.
+	</canvas>
+      </td>
+      <td class="smalllabel">
+	Netz39-<br/>Clients    
+      </td>
+    </tr>
     <tr>
       <td style="text-align: right;">
 	<canvas id="display_nodes" width="158" height="71">
@@ -135,7 +145,7 @@ function update() {
 	gesamt
       </td>
     </tr>
-    <tr>
+    <!--tr>
       <td style="text-align: right;">
 	<canvas id="display_mesh_links" width="158" height="71">
 	  Your browser is unfortunately not supported.
@@ -145,21 +155,11 @@ function update() {
 	Mesh<br/>
 	-Links
       </td>
-    </tr>
-    <tr>
-      <td style="text-align: right;">
-	<canvas id="display_n39_clients" width="111" height="71">
-	  Your browser is unfortunately not supported.
-	</canvas>
-      </td>
-      <td class="smalllabel">
-	Netz39<br/>-Clients    
-      </td>
-    </tr>
+    </tr-->
     </table>
 
     <div id="nodes_online" class="largesegment" style="width: 487; height:262; position: absolute; bottom: 50; right: 50">
-      <h1>Online-Knoten</h1>
+      <h1>Knoten Online</h1>
       <canvas id="display_nodes_online" width="487" height="201">
 	Your browser is unfortunately not supported.
       </canvas>
